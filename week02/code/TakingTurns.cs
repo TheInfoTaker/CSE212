@@ -22,7 +22,7 @@ public static class TakingTurns {
         players.AddPerson("Bob", 2);
         players.AddPerson("Tim", 5);
         players.AddPerson("Sue", 3);
-        // Console.WriteLine(players);    // This can be un-commented out for debug help
+        Console.WriteLine(players);    // This can be un-commented out for debug help
         while (players.Length > 0)
             players.GetNextPerson();
         // Defect(s) Found: 
@@ -40,7 +40,7 @@ public static class TakingTurns {
         players.AddPerson("Sue", 3);
         for (int i = 0; i < 5; i++) {
             players.GetNextPerson();
-            // Console.WriteLine(players);
+            Console.WriteLine(players);
         }
 
         players.AddPerson("George", 3);
@@ -61,10 +61,10 @@ public static class TakingTurns {
         players.AddPerson("Bob", 2);
         players.AddPerson("Tim", 0);
         players.AddPerson("Sue", 3);
-        // Console.WriteLine(players);
+        Console.WriteLine(players);
         for (int i = 0; i < 10; i++) {
             players.GetNextPerson();
-            // Console.WriteLine(players);
+            Console.WriteLine(players);
         }
         // Defect(s) Found: 
 

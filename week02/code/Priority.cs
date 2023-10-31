@@ -22,7 +22,15 @@ public static class Priority {
         // Expected Result: 
         Console.WriteLine("Test 1");
 
-        // Defect(s) Found: 
+        // Defect(s) Found:
+
+        priorityQueue.Enqueue(" Item 1", 1);
+        priorityQueue.Enqueue(" Item 2", 2);
+        priorityQueue.Enqueue(" Item 3", 3);
+
+        Console.WriteLine("Dequeue Result 1" + priorityQueue.Dequeue());
+        Console.WriteLine("Dequeue Result 2" + priorityQueue.Dequeue());
+        Console.WriteLine("Dequeue Result 3" + priorityQueue.Dequeue());
 
         Console.WriteLine("---------");
 
@@ -32,6 +40,12 @@ public static class Priority {
         Console.WriteLine("Test 2");
 
         // Defect(s) Found: 
+
+        priorityQueue.Enqueue(" Item 1", 2);
+        priorityQueue.Enqueue(" Item 2", 2);
+
+        Console.WriteLine("Dequeue Result 1" + priorityQueue.Dequeue());
+        Console.WriteLine("Dequeue Result 2" + priorityQueue.Dequeue());
 
         Console.WriteLine("---------");
 
