@@ -1,4 +1,6 @@
-﻿public class DuplicateCounter
+﻿using System.Reflection.Metadata.Ecma335;
+
+public class DuplicateCounter
 {
     //Count how many duplicates are in a collection of data.
 
@@ -20,11 +22,28 @@
 
         Console.WriteLine($"Number of items in the collection: {data.Length}");
         Console.WriteLine($"Number of duplicates : {CountDuplicates(data)}");
+        Console.WriteLine($"Number of duplicates (alternate): {CountDuplicatesAlternate(data)}");
     }
 
     private static int CountDuplicates(int[] data)
     {
-        // Add code here.
-        return 0;
+        var uneque = new HashSet<int>();
+        var duplicates = 0;
+
+        foreach (var x in data)
+        {
+            if (uneque.Contains(x))
+                duplicates++;
+            else
+                uneque.Add(x);
+        }
+
+        return duplicates;
+    }
+
+    private static int CountDuplicatesAlternate(int[] data)
+    {
+        var unique = new HashSet<int>(data);
+        return data.Length - unique.Count;
     }
 }

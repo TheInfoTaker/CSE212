@@ -111,6 +111,15 @@ public static class SetsAndMapsTester {
         // To display the pair correctly use something like:
         // Console.WriteLine($"{word} & {pair}");
         // Each pair of words should displayed on its own line.
+        var wordSet = new HashSet<string>();
+
+        foreach (var word in words) {
+            var reverseWord = new string (word.Reverse().ToArray());
+            if (word != reverseWord && wordSet.Contains(reverseWord)) {
+                Console.WriteLine($"{word} & {reverseWord}");
+            }
+            wordSet.Add(word);
+        }
     }
 
     /// <summary>
@@ -131,7 +140,15 @@ public static class SetsAndMapsTester {
         var degrees = new Dictionary<string, int>();
         foreach (var line in File.ReadLines(filename)) {
             var fields = line.Split(",");
-            // Todo Problem 2 - ADD YOUR CODE HERE
+            if (fields.Length > 4) {
+                var degree = fields[4].Trim();
+                if (!degrees.ContainsKey(degree)) {
+                    degrees[degree] = 1;
+                }
+                else{
+                    degrees[degree]++;
+                }
+            }
         }
 
         return degrees;
@@ -157,8 +174,33 @@ public static class SetsAndMapsTester {
     /// # Problem 3 #
     /// #############
     private static bool IsAnagram(string word1, string word2) {
-        // Todo Problem 3 - ADD YOUR CODE HERE
-        return false;
+        word1 = new string(word1.Where(c => !char.IsWhiteSpace(c)).ToArray()).ToLower();
+        word2 = new string(word2.Where(c => !char.IsWhiteSpace(c)).ToArray()).ToLower();
+
+        if (word1.Length != word2.Length) {
+            return false;
+        }
+
+        var charCount = new Dictionary<char, int>();
+
+        foreach (char c in word1) {
+            if (charCount.ContainsKey(c)) {
+                charCount[c]++;
+            }
+            else {
+                charCount[c] = 1;
+            }
+
+        }
+        foreach (char c in word2) {
+            if (charCount.ContainsKey(c)) {
+                charCount[c]--;
+            }
+            else {
+                return false;
+            }
+        }
+        return charCount.Values.All(count => count == 0);
     }
 
     /// <summary>
@@ -219,8 +261,22 @@ public static class SetsAndMapsTester {
     /// 
     /// https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php
     /// 
-    /// </summary>
-    private static void EarthquakeDailySummary() {
+        /// </summary>
+        /// 
+
+    public class Feature
+    {
+        public string Place { get; set; }
+        public double Mag { get; set; }
+    }
+
+    public class FeatureCollection
+    {
+        public List<Feature> Features { get; set; }
+    }
+
+    private static void EarthquakeDailySummary()
+    {
         const string uri = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
         using var client = new HttpClient();
         using var getRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
@@ -230,7 +286,12 @@ public static class SetsAndMapsTester {
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
         var featureCollection = JsonSerializer.Deserialize<FeatureCollection>(json, options);
-        // 1. Add your code to map the json to the feature collection object
-        // 2. Print out each place a earthquake has happened today
+        if (featureCollection != null && featureCollection.Features != null) {
+            Console.WriteLine("\n=========== Earthquake TESTS ===========");
+            foreach (var feature in featureCollection.Features) {
+                Console.WriteLine($"{feature.Place} - Mag {feature.Mag}");
+            }
+        }
     }
 }
+

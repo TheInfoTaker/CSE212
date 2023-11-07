@@ -30,6 +30,13 @@ public class Maze {
     /// </summary>
     public void MoveLeft() {
         // FILL IN CODE
+        var NewPosition = (_currX - 1, _currY);
+        if (_mazeMap.TryGetValue(NewPosition, out var directions) && directions[0]) {
+            _currX--;
+        }
+        else {
+            Console.WriteLine("Can't go Left!");
+        }
     }
 
     /// <summary>
@@ -37,24 +44,45 @@ public class Maze {
     /// can't move, then display "Can't go that way!"
     /// </summary>
     public void MoveRight() {
-        // FILL IN CODE
+        var newPosition = (_currX + 1, _currY);
+        if (_mazeMap.TryGetValue(newPosition, out var directions) && directions[1]) {
+            _currX++;
+        }
+        else {
+            Console.WriteLine("Can't go right!");
+        }
     }
+
 
     /// <summary>
     /// Check to see if you can move up.  If you can, then move.  If you
     /// can't move, then display "Can't go that way!"
     /// </summary>
     public void MoveUp() {
-        // FILL IN CODE
+    var newPosition = (_currX, _currY - 1);
+    if (_mazeMap.TryGetValue(newPosition, out var directions) && directions[2]) {
+        _currY--;
     }
+    else {
+        Console.WriteLine("Can't go up!");
+    }
+}
+
 
     /// <summary>
     /// Check to see if you can move down.  If you can, then move.  If you
     /// can't move, then display "Can't go that way!"
     /// </summary>
     public void MoveDown() {
-        // FILL IN CODE
+    var newPosition = (_currX, _currY + 1);
+    if (_mazeMap.TryGetValue(newPosition, out var directions) && directions[3]) {
+        _currY++;
     }
+    else {
+        Console.WriteLine("Can't go down!");
+    }
+}
+
 
     public void ShowStatus() {
         Console.WriteLine($"Current location (x={_currX}, y={_currY})");
