@@ -1,0 +1,400 @@
+
+
+User
+BinarySearchTree.cs: using System.Collections;
+
+public class BinarySearchTree : IEnumerable<int> {
+    private Node? _root;
+
+    /// <summary>
+    /// Insert a new node in the BST.
+    /// </summary>
+    public void Insert(int value) {
+        // Create new node
+        Node newNode = new Node(value);
+        // If the list is empty, then point both head and tail to the new node.
+        if (_root is null)
+            _root = newNode;
+        // If the list is not empty, then only head will be affected.
+        else
+            _root.Insert(value);
+    }
+
+    /// <summary>
+    /// Check to see if the tree contains a certain value
+    /// </summary>
+    /// <param name="value">The value to look for</param>
+    /// <returns>true if found, otherwise false</returns>
+    public bool Contains(int value) {
+        return _root != null && _root.Contains(value);
+    }
+
+    /// <summary>
+    /// Yields all values in the tree
+    /// </summary>
+    IEnumerator IEnumerable.GetEnumerator() {
+        // call the generic version of the method
+        return GetEnumerator();
+    }
+
+    /// <summary>
+    /// Iterate forward through the BST
+    /// </summary>
+    public IEnumerator<int> GetEnumerator() {
+        var numbers = new List<int>();
+        TraverseForward(_root, numbers);
+        foreach (var number in numbers) {
+            yield return number;
+        }
+    }
+
+    private void TraverseForward(Node? node, List<int> values) {
+        if (node is not null) {
+            TraverseForward(node.Left, values);
+            values.Add(node.Data);
+            TraverseForward(node.Right, values);
+        }
+    }
+
+    /// <summary>
+    /// Iterate backward through the BST.
+    /// </summary>
+    public IEnumerable Reverse() {
+        var numbers = new List<int>();
+        TraverseBackward(_root, numbers);
+        foreach (var number in numbers) {
+            yield return number;
+        }
+    }
+
+    private void TraverseBackward(Node? node, List<int> values) {
+        // TODO Problem 3
+    }
+
+    /// <summary>
+    /// Get the height of the tree
+    /// </summary>
+    public int GetHeight() {
+        if (_root is null)
+            return 0;
+        return _root.GetHeight();
+    }
+
+    public override string ToString() {
+        return "<Bst>{" + string.Join(", ", this) + "}";
+    }
+}
+
+ChatGPT
+It looks like you've shared a C# implementation of a Binary Search Tree (BST) with some functionality. I noticed there's a placeholder (TODO Problem 3) in the TraverseBackward method. If you want help completing that or have any other questions or concerns about the code, feel free to let me know!
+
+Here's a completed version of the TraverseBackward method:
+
+csharp
+Copy code
+private void TraverseBackward(Node? node, List<int> values) {
+    if (node is not null) {
+        TraverseBackward(node.Right, values); // Traverse right subtree first for reverse order
+        values.Add(node.Data);
+        TraverseBackward(node.Left, values);
+    }
+}
+This modification ensures that the BST is traversed in reverse order, visiting the right subtree before the left subtree. This results in a traversal that goes from the largest elements to the smallest, giving a backward iteration through the BST.
+
+If you have any further questions or if there's anything else you'd like assistance with, please let me know!
+
+
+
+
+User
+Node.cs: public class Node {
+    public int Data { get; set; }
+    public Node? Right { get; private set; }
+    public Node? Left { get; private set; }
+
+    public Node(int data) {
+        this.Data = data;
+    }
+
+    public void Insert(int value) {
+        if (value < Data) {
+            // Insert to the left
+            if (Left is null)
+                Left = new Node(value);
+            else
+                Left.Insert(value);
+        }
+        else {
+            // Insert to the right
+            if (Right is null)
+                Right = new Node(value);
+            else
+                Right.Insert(value);
+        }
+    }
+
+    public bool Contains(int value) {
+        // TODO Start Problem 2
+        return false;
+    }
+
+    public int GetHeight() {
+        // TODO Start Problem 4
+        return 0; // Replace this line with the correct return statement(s)
+    }
+}
+
+ChatGPT
+It seems like you have some placeholders (TODO Start Problem 2 and TODO Start Problem 4) in your Node class. I'll provide you with the completed versions:
+
+Problem 2: Implementing Contains Method
+csharp
+Copy code
+public bool Contains(int value) {
+    if (value == Data) {
+        // Found the value in this node
+        return true;
+    }
+    else if (value < Data && Left != null) {
+        // Search in the left subtree
+        return Left.Contains(value);
+    }
+    else if (value > Data && Right != null) {
+        // Search in the right subtree
+        return Right.Contains(value);
+    }
+    
+    // Value not found
+    return false;
+}
+This method recursively searches for a value in the BST. If the value is found in the current node, it returns true. Otherwise, it continues the search in the appropriate subtree (left or right) if it exists.
+
+Problem 4: Implementing GetHeight Method
+csharp
+Copy code
+public int GetHeight() {
+    int leftHeight = (Left != null) ? Left.GetHeight() : 0;
+    int rightHeight = (Right != null) ? Right.GetHeight() : 0;
+
+    // The height of the current node is the maximum height of its subtrees plus 1
+    return 1 + Math.Max(leftHeight, rightHeight);
+}
+This method calculates and returns the height of the current node in the BST. The height of a node is defined as the length of the longest path from the node to a leaf node. It recursively calculates the height of the left and right subtrees and returns the maximum height plus 1.
+
+If you have any further questions or if there's anything else you'd like assistance with, please let me know!
+
+
+
+
+User
+TreesTester.cs: public static class TreesTester {
+    /// <summary>
+    /// Entry point for the Prove 9 tests
+    /// </summary>
+    public static void Run() {
+        // Sample Test Cases (may not be comprehensive)
+        Console.WriteLine("\n=========== PROBLEM 1 TESTS ===========");
+        BinarySearchTree tree = new BinarySearchTree();
+        tree.Insert(5);
+        tree.Insert(3);
+        tree.Insert(7);
+        // After implementing 'no duplicates' rule,
+        // this next insert will have no effect on the tree.
+        // TODO Problem 1
+        tree.Insert(7);
+        tree.Insert(4);
+        tree.Insert(10);
+        tree.Insert(1);
+        tree.Insert(6);
+        Console.WriteLine(tree.ToString()); // 1, 3, 4, 5, 6, 7, 10
+
+        Console.WriteLine("\n=========== PROBLEM 2 TESTS ===========");
+        Console.WriteLine(tree.Contains(3)); // True
+        Console.WriteLine(tree.Contains(2)); // False
+        Console.WriteLine(tree.Contains(7)); // True
+        Console.WriteLine(tree.Contains(6)); // True
+        Console.WriteLine(tree.Contains(9)); // False
+
+        Console.WriteLine("\n=========== PROBLEM 3 TESTS ===========");
+        foreach (var value in tree.Reverse()) {
+            Console.WriteLine(value); // 10, 7, 6, 5, 4, 3, 1
+        }
+
+        Console.WriteLine("\n=========== PROBLEM 4 TESTS ===========");
+        Console.WriteLine(tree.GetHeight()); // 3
+        tree.Insert(6);
+        Console.WriteLine(tree.GetHeight()); // 3
+        tree.Insert(12);
+        Console.WriteLine(tree.GetHeight()); // 4
+
+        Console.WriteLine("\n=========== PROBLEM 5 TESTS ===========");
+        var tree1 = CreateTreeFromSortedList(new[] { 10, 20, 30, 40, 50, 60 });
+        var tree2 = CreateTreeFromSortedList(Enumerable.Range(0, 127).ToArray()); // 2^7 - 1 nodes
+        var tree3 = CreateTreeFromSortedList(Enumerable.Range(0, 128).ToArray()); // 2^7 nodes
+        var tree4 = CreateTreeFromSortedList(new[] { 42 });
+        var tree5 = CreateTreeFromSortedList(Array.Empty<int>());
+        Console.WriteLine(tree1.GetHeight()); // 3
+        Console.WriteLine(tree2.GetHeight()); // 7 .. any higher and its not balanced
+        Console.WriteLine(tree3.GetHeight()); // 8 .. any higher and its not balanced
+        Console.WriteLine(tree4.GetHeight()); // 1
+        Console.WriteLine(tree5.GetHeight()); // 0
+    }
+
+    /// <summary>
+    /// Given a sorted list (sorted_list), create a balanced BST.  If the values in the
+    /// sortedNumbers were inserted in order from left to right into the BST, then it
+    /// would resemble a linked list (unbalanced). To get a balanced BST, the
+    /// InsertMiddle function is called to find the middle item in the list to add
+    /// first to the BST. The InsertMiddle function takes the whole list but also takes
+    /// a range (first to last) to consider.  For the first call, the full range of 0 to
+    /// Length-1 used.
+    /// </summary>
+    private static BinarySearchTree CreateTreeFromSortedList(int[] sortedNumbers) {
+        var bst = new BinarySearchTree(); // Create an empty BST to start with 
+        InsertMiddle(sortedNumbers, 0, sortedNumbers.Length - 1, bst);
+        return bst;
+    }
+
+    /// <summary>
+    /// This function will attempt to insert the item in the middle of 'sortedNumbers' into
+    /// the 'bst' tree. The middle is determined by using indices represented by 'first' and
+    /// 'last'.
+    /// For example, if the function was called on:
+    /// <code>
+    /// sortedNumbers = new[]{10, 20, 30, 40, 50, 60};
+    /// first = 0;
+    /// last = 5;
+    /// </code>
+    /// then the value 30 (index 2 which is the middle) would be added 
+    /// to the 'bst' (the insert function in the <see cref="BinarySearchTree"/> can be used
+    /// to do this).   
+    ///
+    /// Subsequent recursive calls are made to insert the middle from the values 
+    /// before 30 and the values after 30.  If done correctly, the order
+    /// in which values are added (which results in a balanced bst) will be:
+    /// <code>
+    /// 30, 10, 20, 50, 40, 60
+    /// </code>
+    /// This function is intended to be called the first time by CreateTreeFromSortedList.
+    ///
+    /// The purpose for having the first and last parameters is so that we do 
+    /// not need to create new sub-lists when we make recursive calls.  Avoid 
+    /// using list slicing to create sub-lists to solve this problem.    
+    /// </summary>
+    /// <param name="sortedNumbers">input numbers that are already sorted</param>
+    /// <param name="first">the first index in the sortedNumbers to insert</param>
+    /// <param name="last">the last index in the sortedNumbers to insert</param>
+    /// <param name="bst">the BinarySearchTree in which to insert the values</param>
+    private static void InsertMiddle(int[] sortedNumbers, int first, int last, BinarySearchTree bst) {
+        // TODO Start Problem 5
+    }
+}
+
+ChatGPT
+It looks like you have a set of tests in the TreesTester class, including comments indicating where you need to implement specific functionality (e.g., TODO Problem 1, TODO Problem 3, and TODO Start Problem 5). Let me help you complete the missing parts:
+
+Problem 1: Inserting into Binary Search Tree without Duplicates
+csharp
+Copy code
+// TODO Problem 1
+// After implementing 'no duplicates' rule,
+// this next insert will have no effect on the tree.
+tree.Insert(7);
+To implement the 'no duplicates' rule, you can modify the Insert method in the BinarySearchTree class to avoid inserting duplicates. One way to do this is to check if the value already exists in the tree before inserting.
+
+csharp
+Copy code
+public void Insert(int value) {
+    // Create new node
+    Node newNode = new Node(value);
+
+    // If the tree is empty, set the root to the new node
+    if (_root is null) {
+        _root = newNode;
+    } else {
+        // Otherwise, call the insert method on the root
+        _root.Insert(value);
+    }
+}
+Problem 3: Implementing Reverse in Binary Search Tree
+csharp
+Copy code
+Console.WriteLine("\n=========== PROBLEM 3 TESTS ===========");
+foreach (var value in tree.Reverse()) {
+    Console.WriteLine(value); // 10, 7, 6, 5, 4, 3, 1
+}
+You've already implemented the TraverseBackward method in the BinarySearchTree class, so the reverse iteration should work correctly. You can keep this part as it is.
+
+Problem 5: Creating a Balanced BST from a Sorted List
+csharp
+Copy code
+private static void InsertMiddle(int[] sortedNumbers, int first, int last, BinarySearchTree bst) {
+    // TODO Start Problem 5
+    if (first <= last) {
+        // Find the middle index
+        int middle = (first + last) / 2;
+
+        // Insert the middle value into the BST
+        bst.Insert(sortedNumbers[middle]);
+
+        // Recursively insert values in the left and right halves
+        InsertMiddle(sortedNumbers, first, middle - 1, bst);
+        InsertMiddle(sortedNumbers, middle + 1, last, bst);
+    }
+}
+This InsertMiddle function takes a sorted array (sortedNumbers), finds the middle element, inserts it into the BST, and then recursively inserts the middle elements of the left and right halves.
+
+Ensure you call the Run method from your application to execute these tests. If you have any further questions or if there's anything else you'd like assistance with, please let me know!
+
+
+
+
+User
+Problem 1 - Insert Unique Values Only
+Update the Insert function of the Node class to only allow unique values to be added to the tree (thus creating a sorted set). The Insert function is already written to correctly insert values into the tree. However, the current implementation will cause duplicate values to be added to the tree.
+
+Problem 2 - Contains
+Implement the Contains function in the Node class. This function is called by the Contains function in the BinarySearchTree to search for a value in the tree. If the value is found, true should be returned; otherwise return false. Hint: study the Insert function. You will need to use recursion to solve this problem.
+
+Problem 3 - Traverse Backwards
+Implement the TraverseBackward function in the BinarySearchTree class. This function is called by the Reversed function to loop through the tree backwards (largest value down to the smallest value). The Reversed function allows you to write code using the foreach syntax like the following:
+
+
+foreach(var value in myTree.Reversed())
+{
+	Console.WriteLine(value);
+}
+Hint: study the TraverseForward function to see how traversing forward is done.
+
+Problem 4 - Tree Height
+Implement the GetHeight function in the Node class to get the height of the BinarySearchTree. The height of any tree (or subtree) is defined as one plus the height of either the left subtree or the right subtree (whichever one is bigger). If the tree has only the root node, then this would be 1 plus the maximum height of either subtree which would be 0. Therefore, the height of a tree with only the root node is 1. You will need to use recursion to solve this problem.
+
+Problem 5 - Create Tree from Sorted List
+Implement the InsertMiddle function (note this function is defined outside the BinarySearchTree class) so that the CreateTreeFromSortedList function can successfully create a balanced tree from a sorted list of values. If we looped through the list of sorted values and added them (using the Insert function in the BinarySearchTree class) one at a time in order, then the resulting tree would look like a linked list. This is not desirable because it results in O(n) instead of O(log n).
+
+To achieve a balanced tree, the InsertMiddle function should find the middle of the list (or sub-list … notice that the function takes a first and last value to keep track of what part of the list you are working with) and add it to the tree. After adding the middle value, then the middle value from the first half and the middle value from the second half should be added. This process (which is recursive) will result in a balanced tree.
+
+The purpose for having the first and last parameters is so that we do not need to create new sublists when we make recursive calls. Avoid using list slicing to create sublists to solve this problem.
+
+Please note that you do NOT need to use a balanced algorithms like AVL or red/black trees in this problem.
+
+ChatGPT
+It looks like you've provided detailed problem statements for each task. Let me help you with the implementations:
+
+Problem 1: Insert Unique Values Only
+csharp
+Copy code
+public void Insert(int value) {
+    if (value < Data) {
+        // Insert to the left
+        if (Left is null)
+            Left = new Node(value);
+        else
+            Left.Insert(value);
+    }
+    else if (value > Data) {
+        // Insert to the right
+        if (Right is null)
+            Right = new Node(value);
+        else
+            Right.Insert(value);
